@@ -37,7 +37,7 @@ namespace BetTest.Controllers
                 product.Id = Guid.NewGuid();
                 product.Name = createProductRequest.Name;
                 product.Description = createProductRequest.Description;
-                product.Category = createProductRequest.Category;
+                product.Photo = createProductRequest.Photo;
                 product.Price = createProductRequest.Price;
             }
             await _context.Products.AddAsync(product);
@@ -56,7 +56,7 @@ namespace BetTest.Controllers
                     viewmodel.Id = product.Id;
                     viewmodel.Name = product.Name;
                     viewmodel.Description = product.Description;
-                    viewmodel.Category = product.Category;
+                    viewmodel.Photo = product.Photo;
                     viewmodel.Price = product.Price;
                 }
                 return await Task.Run(() => View("View", viewmodel));
@@ -74,7 +74,7 @@ namespace BetTest.Controllers
             {
                 product.Name = model.Name;
                 product.Description = model.Description;
-                product.Category = model.Category;
+                product.Photo = model.Photo;
                 product.Price = model.Price;
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -95,5 +95,6 @@ namespace BetTest.Controllers
             }
             return RedirectToAction("Index");
         }
+       
     }
 }

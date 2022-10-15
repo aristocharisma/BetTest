@@ -5,24 +5,61 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
+           @* <th>Id</th>*@
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
-            <th>Category</th>
-            <th>ddd</th>
+            <th>Photo</th>
+            <th></th>
+           @* <th></th>*@
         </tr>
     </thead>
     <tbody>
         @foreach (var product in Model)
         {
             <tr>
-                <td>@product.Id</td>
+               @* <td>@product.Id</td>*@
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price</td>
-                <td>@product.Category</td>
-                <td><a href="Products/View/@product.Id">View</a></td>
+                <td>
+                    @{
+                        var imageText = "";
+                        if (product.Photo.EndsWith("/NoImage.jpg"))
+                        {
+                            imageText = "No Image for" + product.Name.Trim() + "-" + product.Description.Trim();
+                        }
+                        else
+                        {
+                            imageText = "No Image for" + product.Name.Trim() + "-" + product.Description.Trim();
+                        }
+                    }
+                    <img src="@product.Photo" class="img-fluid" alt="@imageText" title="@imageText" />
+                </td>
+                <td>
+                    <form method="post" action="AddCartItems">
+                    <div class="d-flex mb-4" style="max-width: 300px">
+                        <button class="btn btn-primary px-3 me-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                            <i class="fas fa-minus"></i>
+                        </button>
+
+                        <div class="form-outline">
+                            <input id="formCart" min="0" name="quantity" value="1" type="number" class="form-control" />
+                            <label class="form-label" for="form1">Quantity</label>
+                        </div>
+
+                        <button class="btn btn-primary px-3 ms-2"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                        <button type="submit" class="btn btn-info btn-sm" asp-action="Delete" asp-controller="Products"><i class="fa-solid fa-cart-shopping fa-2x"></i></button>
+                    </form>
+                </td>
+              @*  <td align="center">
+                    
+                </td>*@
             </tr>
         }
     </tbody>
