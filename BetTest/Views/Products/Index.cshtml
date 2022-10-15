@@ -5,20 +5,21 @@
 <table class="table">
     <thead>
         <tr>
-           @* <th>Id</th>*@
+            <th hidden="hidden">Id</th>
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
             <th>Photo</th>
             <th></th>
-           @* <th></th>*@
+            @* <th></th>*@
         </tr>
     </thead>
     <tbody>
         @foreach (var product in Model)
         {
+
             <tr>
-               @* <td>@product.Id</td>*@
+                <td hidden="hidden">@product.Id</td>
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price</td>
@@ -36,31 +37,55 @@
                     }
                     <img src="@product.Photo" class="img-fluid" alt="@imageText" title="@imageText" />
                 </td>
-                <td>
-                    <form method="post" action="AddCartItems">
-                    <div class="d-flex mb-4" style="max-width: 300px">
-                        <button class="btn btn-primary px-3 me-2"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                            <i class="fas fa-minus"></i>
-                        </button>
+                <td align="center">
+                    <form method="post" asp-action="AddCartItems" AddCartItems" asp-controller="Products" asp-route-id="@product.Id">
+                        <div class="d-flex mb-4" style="max-width: 300px">
+                           
+                            <button class="btn btn-primary px-3 me-2"
+                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                <i class="fas fa-minus"></i>
+                            </button>
 
-                        <div class="form-outline">
-                            <input id="formCart" min="0" name="quantity" value="1" type="number" class="form-control" />
-                            <label class="form-label" for="form1">Quantity</label>
+                            <div class="form-outline">
+                                <input id="formCart" min="0" name="quantity" value="1" type="number" class="form-control" data-id=@product.Id />
+                                <label class="form-label" for="form1">Quantity</label>
+                            </div>
+
+                            <button class="btn btn-primary px-3 ms-2"
+                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
-
-                        <button class="btn btn-primary px-3 ms-2"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                        <button type="submit" class="btn btn-info btn-sm" asp-action="Delete" asp-controller="Products"><i class="fa-solid fa-cart-shopping fa-2x"></i></button>
+                        <button type="submit"  class="btn btn-info btn-sm"><i class="fa-solid fa-cart-shopping fa-2x"></i></button>
                     </form>
                 </td>
-              @*  <td align="center">
-                    
-                </td>*@
             </tr>
         }
     </tbody>
 </table>
+
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        function AddCartItems(productid) {
+            try {
+                $.ajax({
+                    url: "/api/Products/AddCartItems",
+                    type: "POST",
+                    data: { id: productid },
+                    success: function (oData) {
+                        alert(oData);
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            }
+            catch (e) {
+                alert(e.message);
+            }
+        }
+    </script>
+}

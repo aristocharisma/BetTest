@@ -95,6 +95,31 @@ namespace BetTest.Controllers
             }
             return RedirectToAction("Index");
         }
-       
+
+        [HttpPost]
+        public async Task<IActionResult> AddCartItems(CreateCartViewModel createCart, Guid id)
+        {        
+            var cart = new Cart();
+            {
+                cart.Id = Guid.NewGuid();
+                cart.Adddate = DateTime.Now;
+               
+            }
+            await _context.Carts.AddAsync(cart);
+            await _context.SaveChangesAsync();
+            Guid productId = id;
+            var cartItem = new CartItem();
+            {
+                cartItem.Id = Guid.NewGuid();
+                cartItem.ProductId = productId;
+                cartItem.CartId = cart.Id;
+                cartItem.Qunatity = createCart.Quantity;
+            }
+            await _context.CartItems.AddAsync(cartItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Carts");            
+        }
+
+
     }
 }
