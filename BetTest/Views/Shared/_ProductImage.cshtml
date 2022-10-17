@@ -1,0 +1,14 @@
+﻿@model BetTest.Models.UpdateProductViewModel
+
+
+@{
+    var imageText = "";
+    if (Model.Photo.EndsWith("/NoImage.jpg")){
+        imageText = "No Image for" + Model.Name.Trim() + "-" + Model.Description.Trim();
+    }
+    else
+    {
+        imageText = "No Image for" + Model.Name.Trim() + "-" + Model.Description.Trim();
+    }
+}
+<img src="@Model.Photo" class="img-fluid" alt="@imageText" title="@imageText" />

@@ -1,0 +1,64 @@
+﻿@model List<BetTest.Models.Domain.Product>
+
+
+<div class="row md-Padding-Top-25">
+    <div class="col-md-2">
+        <h1> Products</h1>
+    </div>
+    <br />
+    <div class="col-md-2 align-right">
+        @Html.ActionLink("", "Index", "Carts",new { }, new { @class = "fa-solid fa-cart-shopping fa-2x"})
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th hidden="hidden">Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Photo</th>
+            <th></th>
+            @* <th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+
+            <tr>
+                <td hidden="hidden">@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+                <td>
+                    @{
+                        var imageText = "";
+                        if (product.Photo.EndsWith("/NoImage.jpg"))
+                        {
+                            imageText = "No Image for" + product.Name.Trim() + "-" + product.Description.Trim();
+                        }
+                        else
+                        {
+                            imageText = "No Image for" + product.Name.Trim() + "-" + product.Description.Trim();
+                        }
+                    }
+                    <img src="@product.Photo" class="img-fluid" alt="@imageText" title="@imageText" />
+                </td>
+                <td align="center">
+                    <form method="post" asp-action="AddCartItems" AddCartItems" asp-controller="Products" asp-route-id="@product.Id">
+                        <div class="d-flex mb-4" style="max-width: 300px">  
+                            <div class="form-outline">
+                                <input id="formCart" min="0" name="quantity" value="1" type="number" class="form-control" data-id=@product.Id />
+                                <label class="form-label" for="form1">Quantity</label>
+                            </div>
+                        </div>
+                        <button type="submit"  class="btn btn-info btn-sm"><i class="fa-solid fa-cart-shopping fa-2x"></i></button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

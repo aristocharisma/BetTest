@@ -1,0 +1,79 @@
+﻿@model List<BetTest.Models.Domain.ViewCart>
+
+
+<div class="row md-Padding-Top-25">
+    <div class="col-md-2">
+        <h1> Cart Items</h1>
+    </div>
+    <br />
+    
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order No.</th>
+            <th>Photo</th>
+            <th hidden="hidden">Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Cost price</th>
+            <th>Vat</th>
+            <th>Total</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cartItem in Model)
+        {
+
+            <tr>
+                <td>@cartItem.CartId</td>
+                <td>
+                    @{
+                        var imageText = "";
+                        if (cartItem.Photo.EndsWith("/NoImage.jpg"))
+                        {
+                            imageText = "No Image for" + cartItem.Name.Trim() + "-" + cartItem.Description.Trim();
+                        }
+                        else
+                        {
+                            imageText = "No Image for" + cartItem.Name.Trim() + "-" + cartItem.Description.Trim();
+                        }
+                    }
+                    <img src="@cartItem.Photo" class="img-fluid" alt="@imageText" title="@imageText" />
+                </td>
+                <td hidden="hidden">@cartItem.Id</td>
+                <td>@cartItem.Name</td>
+                <td>@cartItem.Description</td>
+                <td>@cartItem.Qunatity</td>
+                <td>@cartItem.Price</td>
+                <td>@cartItem.LineTotal.ToString("0.00")</td>
+                <td>@cartItem.Vat.ToString("0.00")</td>
+                <td>@cartItem.TotalInclVat.ToString("0.00")</td>
+
+            </tr>
+
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan"3">Total</td>
+            <td>@Model.Sum(i => i.TotalInclVat).ToString("0.##")</td>
+            <td>
+           
+            </td>
+            <td>
+                <form asp-action="SendEmail" asp-controller="Carts">
+                    <button type="submit" class="btn btn-info btn-sm" ><i class="fa-solid fa-envelope fa-2x"></i></button>
+
+                </form>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+
+
