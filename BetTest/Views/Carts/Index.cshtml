@@ -8,9 +8,11 @@
     <br />
     
 </div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>Order No.</th>
             <th>Photo</th>
             <th hidden="hidden">Id</th>
             <th>Name</th>
@@ -28,6 +30,7 @@
         {
 
             <tr>
+                <td>@cartItem.CartId</td>
                 <td>
                     @{
                         var imageText = "";
@@ -59,6 +62,9 @@
         <tr>
             <td colspan"3">Total</td>
             <td>@Model.Sum(i => i.TotalInclVat).ToString("0.##")</td>
+            <td>
+           
+            </td>
             <td>
                 <form asp-action="SendEmail" asp-controller="Carts">
                     <button type="submit" class="btn btn-info btn-sm" ><i class="fa-solid fa-envelope fa-2x"></i></button>
