@@ -5,8 +5,8 @@ namespace BetTest.Data
 {
     public class BetTestDBContext : DbContext
     {
-
-        public BetTestDBContext(DbContextOptions options) : base(options)
+        
+        public BetTestDBContext(DbContextOptions<BetTestDBContext> options) : base(options)
         {
         }
 

@@ -1,7 +1,15 @@
 ﻿@model List<BetTest.Models.Domain.Product>
 
-<h1> Products</h1>
 
+<div class="row md-Padding-Top-25">
+    <div class="col-md-2">
+        <h1> Products</h1>
+    </div>
+    <br />
+    <div class="col-md-2 align-right">
+        @Html.ActionLink("", "Index", "Carts",new { }, new { @class = "fa-solid fa-cart-shopping fa-2x"})
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -39,22 +47,11 @@
                 </td>
                 <td align="center">
                     <form method="post" asp-action="AddCartItems" AddCartItems" asp-controller="Products" asp-route-id="@product.Id">
-                        <div class="d-flex mb-4" style="max-width: 300px">
-                           
-                            <button class="btn btn-primary px-3 me-2"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                <i class="fas fa-minus"></i>
-                            </button>
-
+                        <div class="d-flex mb-4" style="max-width: 300px">  
                             <div class="form-outline">
                                 <input id="formCart" min="0" name="quantity" value="1" type="number" class="form-control" data-id=@product.Id />
                                 <label class="form-label" for="form1">Quantity</label>
                             </div>
-
-                            <button class="btn btn-primary px-3 ms-2"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                <i class="fas fa-plus"></i>
-                            </button>
                         </div>
                         <button type="submit"  class="btn btn-info btn-sm"><i class="fa-solid fa-cart-shopping fa-2x"></i></button>
                     </form>
@@ -65,27 +62,3 @@
 </table>
 
 
-@section scripts {
-
-    <script type="text/javascript">
-
-        function AddCartItems(productid) {
-            try {
-                $.ajax({
-                    url: "/api/Products/AddCartItems",
-                    type: "POST",
-                    data: { id: productid },
-                    success: function (oData) {
-                        alert(oData);
-                    },
-                    error: function (error) {
-                        alert(error);
-                    }
-                });
-            }
-            catch (e) {
-                alert(e.message);
-            }
-        }
-    </script>
-}

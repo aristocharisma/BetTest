@@ -1,19 +1,25 @@
-﻿using BetTest.Data;
+﻿using BetTest.Areas.Identity.Data;
+using BetTest.Data;
 using BetTest.Models;
 using BetTest.Models.Domain;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BetTest.Controllers
 {
-
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly BetTestDBContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductsController(BetTestDBContext context)
+        public ProductsController(BetTestDBContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -32,6 +38,7 @@ namespace BetTest.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductViewModel createProductRequest)
         {
+
             var product = new Product();
             {
                 product.Id = Guid.NewGuid();
@@ -98,26 +105,39 @@ namespace BetTest.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddCartItems(CreateCartViewModel createCart, Guid id)
-        {        
-            var cart = new Cart();
-            {
-                cart.Id = Guid.NewGuid();
-                cart.Adddate = DateTime.Now;
-               
-            }
-            await _context.Carts.AddAsync(cart);
-            await _context.SaveChangesAsync();
+        {
             Guid productId = id;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var checkcart = await _context.Carts.FirstOrDefaultAsync(x => x.userId == userId);
+            var cart = new Cart();
+            if (checkcart == null)
+            {               
+                {
+                    cart.Id = Guid.NewGuid();
+                    cart.userId = userId;
+                    cart.Adddate = DateTime.Now;
+                    await _context.Carts.AddAsync(cart);
+                    await _context.SaveChangesAsync();
+                }
+            }            
+           
             var cartItem = new CartItem();
             {
                 cartItem.Id = Guid.NewGuid();
                 cartItem.ProductId = productId;
-                cartItem.CartId = cart.Id;
+                if (checkcart != null)
+                {
+                    cartItem.CartId = checkcart.Id;
+                }
+                else
+                {
+                    cartItem.CartId = cart.Id;
+                }
                 cartItem.Qunatity = createCart.Quantity;
             }
             await _context.CartItems.AddAsync(cartItem);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Carts");            
+            return RedirectToAction("Index", "Carts");
         }
 
 
